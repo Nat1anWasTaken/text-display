@@ -2,6 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
 	import { Maximize } from '@lucide/svelte';
+	import { onMount } from 'svelte';
 
 	let {
 		class: className = '',
@@ -16,6 +17,18 @@
 			document.exitFullscreen();
 		}
 	}
+
+	onMount(() => {
+		document.addEventListener('fullscreenchange', () => {
+			fullscreen = document.fullscreenElement !== null;
+		});
+
+		return () => {
+			document.removeEventListener('fullscreenchange', () => {
+				fullscreen = document.fullscreenElement !== null;
+			});
+		};
+	});
 </script>
 
 <Button
