@@ -3,13 +3,17 @@
 	import { cn } from '$lib/utils';
 	import { Maximize } from '@lucide/svelte';
 
-	let { class: className = '' }: { class?: string } = $props();
+	let {
+		class: className = '',
+		fullscreen = $bindable(false)
+	}: { class?: string; fullscreen?: boolean } = $props();
 
 	function toggleFullScreen() {
-		if (document.fullscreenElement) {
-			document.exitFullscreen();
-		} else {
+		fullscreen = !fullscreen;
+		if (fullscreen) {
 			document.documentElement.requestFullscreen();
+		} else {
+			document.exitFullscreen();
 		}
 	}
 </script>
