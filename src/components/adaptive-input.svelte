@@ -51,6 +51,8 @@
 			textareaElement.focus();
 		}
 
+		handleInput();
+
 		window.addEventListener('resize', () => {
 			autoResize();
 			adjustFontSize();
