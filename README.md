@@ -83,54 +83,6 @@ Example:
 https://your-domain.com/?value=Hello%20World&fullscreen=true
 ```
 
-### Keyboard Shortcuts & Controls
-
-- **Hover over top-right corner**: Reveals control buttons
-- **Copy URL Button**: Copies the current display URL with text and settings
-- **Theme Toggle**: Switches between light and dark themes
-- **Fullscreen Button**: Toggles fullscreen mode
-- **ESC**: Exit fullscreen mode (browser standard)
-
-## Development
-
-### Available Scripts
-
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm preview` - Preview production build
-- `pnpm check` - Run type checking
-- `pnpm format` - Format code with Prettier
-- `pnpm lint` - Lint code with ESLint
-
-### Project Structure
-
-```
-src/
-├── components/           # Reusable Svelte components
-│   ├── adaptive-input.svelte     # Main text input with font sizing
-│   ├── color-mode-button.svelte  # Theme toggle button
-│   ├── copy-url-button.svelte    # URL sharing button
-│   └── full-screen-button.svelte # Fullscreen toggle
-├── lib/
-│   ├── components/ui/    # UI component library
-│   └── utils.ts         # Utility functions
-├── routes/
-│   ├── +layout.svelte   # App layout
-│   ├── +page.svelte     # Main page
-│   └── +page.ts         # Page load function
-├── app.css              # Global styles and Tailwind config
-└── app.html             # HTML template
-```
-
-## Use Cases
-
-- **Presentations**: Display key points, quotes, or announcements
-- **Digital Signage**: Show messages, announcements, or information
-- **Teleprompter**: Use for reading scripts or speeches
-- **Shared Displays**: Show text that needs to be visible from a distance
-- **Accessibility**: Large text display for users with visual impairments
-- **Teaching**: Display text for classroom instruction
-
 ## Contributing
 
 1. Fork the repository
