@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { replaceState } from '$app/navigation';
+	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import AdaptiveInput from '../components/adaptive-input.svelte';
 	import ColorModeButton from '../components/color-mode-button.svelte';
+	import CopyImageButton from '../components/copy-image-button.svelte';
 	import CopyUrlButton from '../components/copy-url-button.svelte';
 	import FullScreenButton from '../components/full-screen-button.svelte';
 
@@ -12,11 +15,7 @@
 
 	$effect(() => {
 		try {
-			history.replaceState(
-				null,
-				'',
-				`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen}`
-			);
+			replaceState(`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen}`, page.state);
 		} catch (error) {
 			console.error(error);
 		}
@@ -35,6 +34,7 @@
 		class="absolute top-5 right-5 flex flex-row gap-2 opacity-0 transition-opacity duration-200 hover:opacity-100"
 	>
 		<CopyUrlButton />
+		<CopyImageButton {value} />
 		<ColorModeButton />
 		<FullScreenButton bind:fullscreen />
 	</div>
