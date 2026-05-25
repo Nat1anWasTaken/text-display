@@ -3,6 +3,7 @@
 	import { cn } from '$lib/utils';
 	import { copyViewportAsImage } from '$lib/utils/copy-as-image';
 	import { Check, Image as ImageIcon } from '@lucide/svelte';
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
 
 	let {
 		class: className = '',
@@ -28,10 +29,23 @@
 	}
 </script>
 
-<Button size="icon" variant="outline" class={cn('cursor-pointer', className)} onclick={copyAsImage}>
-	{#if copied}
-		<Check class="animate-in fade-in-0 text-green-500 duration-100" />
-	{:else}
-		<ImageIcon class="animate-in fade-in-0 duration-100" />
-	{/if}
-</Button>
+<Tooltip>
+	<TooltipTrigger>
+		{#snippet child({ props })}
+			<Button
+				{...props}
+				size="icon"
+				variant="outline"
+				class={cn('cursor-pointer', className)}
+				onclick={copyAsImage}
+			>
+				{#if copied}
+					<Check class="animate-in fade-in-0 text-green-500 duration-100" />
+				{:else}
+					<ImageIcon class="animate-in fade-in-0 duration-100" />
+				{/if}
+			</Button>
+		{/snippet}
+	</TooltipTrigger>
+	<TooltipContent side="bottom">Copy as image</TooltipContent>
+</Tooltip>

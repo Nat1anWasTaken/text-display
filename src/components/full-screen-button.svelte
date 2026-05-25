@@ -3,6 +3,7 @@
 	import { cn } from '$lib/utils';
 	import { Maximize } from '@lucide/svelte';
 	import { onMount } from 'svelte';
+	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
 
 	let {
 		class: className = '',
@@ -18,6 +19,8 @@
 		}
 	}
 
+	const tooltipText = $derived(fullscreen ? 'Exit fullscreen' : 'Enter fullscreen');
+
 	onMount(() => {
 		document.addEventListener('fullscreenchange', () => {
 			fullscreen = document.fullscreenElement !== null;
@@ -31,11 +34,19 @@
 	});
 </script>
 
-<Button
-	size="icon"
-	variant="outline"
-	class={cn('cursor-pointer', className)}
-	onclick={toggleFullScreen}
->
-	<Maximize />
-</Button>
+<Tooltip>
+	<TooltipTrigger>
+		{#snippet child({ props })}
+			<Button
+				{...props}
+				size="icon"
+				variant="outline"
+				class={cn('cursor-pointer', className)}
+				onclick={toggleFullScreen}
+			>
+				<Maximize />
+			</Button>
+		{/snippet}
+	</TooltipTrigger>
+	<TooltipContent side="bottom">{tooltipText}</TooltipContent>
+</Tooltip>
