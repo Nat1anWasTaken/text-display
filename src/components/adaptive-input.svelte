@@ -12,8 +12,13 @@
 	} from '@codemirror/view';
 	import { onMount, tick } from 'svelte';
 
-	let { class: className = '', value = $bindable('') }: { class?: string; value?: string } =
-		$props();
+	type TextSizeMode = 'largest' | 'capped';
+
+	let {
+		class: className = '',
+		value = $bindable(''),
+		sizeMode = 'largest'
+	}: { class?: string; value?: string; sizeMode?: TextSizeMode } = $props();
 
 	let editorHost: HTMLDivElement | null = $state(null);
 	let view: EditorView | null = null;
@@ -21,6 +26,10 @@
 
 	const MIN_FONT_SIZE = 1;
 	const HARD_MAX_FONT_SIZE = 10000;
+	const CAPPED_MIN_FONT_SIZE = 16;
+	const CAPPED_DEFAULT_FONT_SIZE = 200;
+	const CAPPED_MAX_FONT_SIZE_RATIO_1 = 0.1;
+	const CAPPED_MAX_FONT_SIZE_RATIO_2 = 0.4;
 	const LINE_HEIGHT = 1.2;
 	const FIT_TOLERANCE = 0.5;
 
@@ -260,8 +269,17 @@
 
 		const lineCount = Math.max(view.state.doc.lines, 1);
 		const heightLimitedFontSize = window.innerHeight / (lineCount * LINE_HEIGHT);
-		let lowerBound = MIN_FONT_SIZE;
-		let upperBound = Math.min(Math.max(heightLimitedFontSize, MIN_FONT_SIZE), HARD_MAX_FONT_SIZE);
+		const maxFontSize =
+			sizeMode === 'capped'
+				? Math.min(
+						window.innerWidth * CAPPED_MAX_FONT_SIZE_RATIO_1,
+						window.innerWidth * CAPPED_MAX_FONT_SIZE_RATIO_2,
+						CAPPED_DEFAULT_FONT_SIZE
+					)
+				: HARD_MAX_FONT_SIZE;
+		const minFontSize = sizeMode === 'capped' ? CAPPED_MIN_FONT_SIZE : MIN_FONT_SIZE;
+		let lowerBound = minFontSize;
+		let upperBound = Math.min(Math.max(heightLimitedFontSize, minFontSize), maxFontSize);
 
 		if (!fitsViewport(lowerBound)) {
 			setFontSize(lowerBound);
@@ -297,6 +315,11 @@
 
 	$effect(() => {
 		if (!syncingFromEditor) syncEditorValue(value);
+		refreshLayout();
+	});
+
+	$effect(() => {
+		sizeMode;
 		refreshLayout();
 	});
 

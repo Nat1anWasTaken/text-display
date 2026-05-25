@@ -7,18 +7,25 @@
 	import CopyImageButton from '../components/copy-image-button.svelte';
 	import CopyUrlButton from '../components/copy-url-button.svelte';
 	import FullScreenButton from '../components/full-screen-button.svelte';
+	import TextSizeModeButton from '../components/text-size-mode-button.svelte';
 
 	let { data } = $props();
 
+	type TextSizeMode = 'largest' | 'capped';
+
 	let value = $state(data.initialValue);
 	let fullscreen = $state(data.fullScreen);
+	let sizeMode: TextSizeMode = $state(data.sizeMode as TextSizeMode);
 	let mounted = $state(false);
 
 	$effect(() => {
 		if (!mounted) return;
 
 		try {
-			replaceState(`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen}`, page.state);
+			replaceState(
+				`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen}&sizeMode=${sizeMode}`,
+				page.state
+			);
 		} catch (error) {
 			console.error(error);
 		}
@@ -34,12 +41,13 @@
 </script>
 
 <div class="flex h-screen w-screen flex-col items-center justify-center">
-	<AdaptiveInput bind:value />
+	<AdaptiveInput bind:value {sizeMode} />
 	<div
 		class="absolute top-5 right-5 flex flex-row gap-2 opacity-0 transition-opacity duration-200 hover:opacity-100"
 	>
 		<CopyUrlButton />
 		<CopyImageButton {value} />
+		<TextSizeModeButton bind:sizeMode />
 		<ColorModeButton />
 		<FullScreenButton bind:fullscreen />
 	</div>
