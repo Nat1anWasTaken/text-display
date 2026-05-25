@@ -23,6 +23,9 @@ importers:
       mode-watcher:
         specifier: ^1.0.8
         version: 1.0.8(svelte@5.34.3)
+      modern-screenshot:
+        specifier: ^4.7.0
+        version: 4.7.0
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -1124,6 +1127,9 @@ packages:
     resolution: {integrity: sha512-1YIgYymrae0lhcG9zPS/YWOvcKsUbM4bLGIh+eXTUIput5+dEJifcmUgp8NSehSXGSwITH6jbSjNhGEIhE3k5Q==}
     peerDependencies:
       svelte: ^5.27.0
+
+  modern-screenshot@4.7.0:
+    resolution: {integrity: sha512-9YxN+ddPSMMlhylOv25VHzXrl9u67QRxoh7+SEewGtgUw7t6hHTrjptSDJUSne9oG4Xk/h2cwG15nIt4Hc9ujg==}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -2452,6 +2458,8 @@ snapshots:
       runed: 0.25.0(svelte@5.34.3)
       svelte: 5.34.3
       svelte-toolbelt: 0.7.1(svelte@5.34.3)
+
+  modern-screenshot@4.7.0: {}
 
   mri@1.2.0: {}
 
