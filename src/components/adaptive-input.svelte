@@ -264,20 +264,20 @@
 		);
 	}
 
-	function adjustFontSize() {
+	function adjustFontSize(currentSizeMode = sizeMode) {
 		if (!view || !editorHost) return;
 
 		const lineCount = Math.max(view.state.doc.lines, 1);
 		const heightLimitedFontSize = window.innerHeight / (lineCount * LINE_HEIGHT);
 		const maxFontSize =
-			sizeMode === 'capped'
+			currentSizeMode === 'capped'
 				? Math.min(
 						window.innerWidth * CAPPED_MAX_FONT_SIZE_RATIO_1,
 						window.innerWidth * CAPPED_MAX_FONT_SIZE_RATIO_2,
 						CAPPED_DEFAULT_FONT_SIZE
 					)
 				: HARD_MAX_FONT_SIZE;
-		const minFontSize = sizeMode === 'capped' ? CAPPED_MIN_FONT_SIZE : MIN_FONT_SIZE;
+		const minFontSize = currentSizeMode === 'capped' ? CAPPED_MIN_FONT_SIZE : MIN_FONT_SIZE;
 		let lowerBound = minFontSize;
 		let upperBound = Math.min(Math.max(heightLimitedFontSize, minFontSize), maxFontSize);
 
@@ -300,9 +300,9 @@
 		view.requestMeasure();
 	}
 
-	async function refreshLayout() {
+	async function refreshLayout(currentSizeMode = sizeMode) {
 		await tick();
-		adjustFontSize();
+		adjustFontSize(currentSizeMode);
 	}
 
 	function syncEditorValue(nextValue: string) {
@@ -319,8 +319,7 @@
 	});
 
 	$effect(() => {
-		sizeMode;
-		refreshLayout();
+		refreshLayout(sizeMode);
 	});
 
 	onMount(() => {
