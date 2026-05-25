@@ -12,8 +12,11 @@
 
 	let value = $state(data.initialValue);
 	let fullscreen = $state(data.fullScreen);
+	let mounted = $state(false);
 
 	$effect(() => {
+		if (!mounted) return;
+
 		try {
 			replaceState(`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen}`, page.state);
 		} catch (error) {
@@ -22,6 +25,8 @@
 	});
 
 	onMount(() => {
+		mounted = true;
+
 		if (data.fullScreen) {
 			window.document.documentElement.requestFullscreen();
 		}
