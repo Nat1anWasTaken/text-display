@@ -17,6 +17,7 @@
 	let fullscreen = $state(data.fullScreen);
 	let sizeMode: TextSizeMode = $state(data.sizeMode as TextSizeMode);
 	let mounted = $state(false);
+	let controlsElement: HTMLDivElement | null = $state(null);
 
 	$effect(() => {
 		if (!mounted) return;
@@ -43,10 +44,12 @@
 <div class="flex h-screen w-screen flex-col items-center justify-center">
 	<AdaptiveInput bind:value {sizeMode} />
 	<div
+		bind:this={controlsElement}
+		data-screenshot-excluded
 		class="absolute top-5 right-5 flex flex-row gap-2 opacity-0 transition-opacity duration-200 hover:opacity-100"
 	>
 		<CopyUrlButton />
-		<CopyImageButton {value} />
+		<CopyImageButton hiddenElements={controlsElement ? [controlsElement] : []} />
 		<TextSizeModeButton bind:sizeMode />
 		<ColorModeButton />
 		<FullScreenButton bind:fullscreen />

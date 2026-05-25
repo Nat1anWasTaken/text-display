@@ -1,10 +1,13 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
-	import { copyValueAsImage } from '$lib/utils/copy-as-image';
+	import { copyViewportAsImage } from '$lib/utils/copy-as-image';
 	import { Check, Image as ImageIcon } from '@lucide/svelte';
 
-	let { class: className = '', value = '' }: { class?: string; value?: string } = $props();
+	let {
+		class: className = '',
+		hiddenElements = []
+	}: { class?: string; hiddenElements?: HTMLElement[] } = $props();
 
 	let copied = $state(false);
 	let timeout: number | null = $state(null);
@@ -15,7 +18,7 @@
 		}
 
 		try {
-			await copyValueAsImage(value);
+			await copyViewportAsImage(hiddenElements);
 
 			copied = true;
 			timeout = setTimeout(() => (copied = false), 1000);
