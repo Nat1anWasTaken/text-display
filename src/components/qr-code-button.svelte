@@ -4,8 +4,11 @@
 	import { cn } from '$lib/utils';
 	import { QrCode, Type } from '@lucide/svelte';
 
-	let { class: className = '', qrMode = $bindable(false) }: { class?: string; qrMode?: boolean } =
-		$props();
+	let {
+		class: className = '',
+		qrMode = false,
+		onToggle
+	}: { class?: string; qrMode?: boolean; onToggle: () => void } = $props();
 
 	const tooltipText = $derived(qrMode ? 'Show text' : 'Show QR code');
 </script>
@@ -18,7 +21,7 @@
 				size="icon"
 				variant="outline"
 				class={cn('cursor-pointer', className)}
-				onclick={() => (qrMode = !qrMode)}
+				onclick={onToggle}
 				aria-label={tooltipText}
 				aria-pressed={qrMode}
 			>

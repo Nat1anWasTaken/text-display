@@ -16,6 +16,7 @@
 	} from '@lucide/svelte';
 	import { toggleMode } from 'mode-watcher';
 	import { onMount, tick } from 'svelte';
+	import { toast } from 'svelte-sonner';
 	import AdaptiveInput from '../components/adaptive-input.svelte';
 	import ColorModeButton from '../components/color-mode-button.svelte';
 	import CopyImageButton from '../components/copy-image-button.svelte';
@@ -44,6 +45,15 @@
 
 	function copyUrl() {
 		return navigator.clipboard.writeText(window.location.href);
+	}
+
+	function toggleQrMode() {
+		if (!qrMode && !value.trim()) {
+			toast.error('Enter some text before switching to QR code mode.');
+			return;
+		}
+
+		qrMode = !qrMode;
 	}
 
 	async function toggleFullscreen() {
@@ -106,7 +116,7 @@
 	>
 		<CopyUrlButton />
 		<CopyImageButton hiddenElements={controlsElement ? [controlsElement] : []} />
-		<QrCodeButton bind:qrMode />
+		<QrCodeButton {qrMode} onToggle={toggleQrMode} />
 		<TextSizeModeButton bind:sizeMode />
 		<ColorModeButton />
 		<FullScreenButton bind:fullscreen />
@@ -126,7 +136,7 @@
 				<Command.Group heading="View">
 					<Command.Item
 						keywords={['qr', 'qrcode', 'scan', 'code', 'text']}
-						onSelect={() => runCommand(() => void (qrMode = !qrMode))}
+						onSelect={() => runCommand(toggleQrMode)}
 					>
 						{#if qrMode}<Type />{:else}<QrCode />{/if}
 						<span>{qrMode ? 'Show text' : 'Show QR code'}</span>
