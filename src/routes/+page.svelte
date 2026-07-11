@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { replaceState } from '$app/navigation';
+	import { afterNavigate, replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import AdaptiveInput from '../components/adaptive-input.svelte';
@@ -7,6 +7,8 @@
 	import CopyImageButton from '../components/copy-image-button.svelte';
 	import CopyUrlButton from '../components/copy-url-button.svelte';
 	import FullScreenButton from '../components/full-screen-button.svelte';
+	import QrCodeButton from '../components/qr-code-button.svelte';
+	import QrCodeDisplay from '../components/qr-code-display.svelte';
 	import TextSizeModeButton from '../components/text-size-mode-button.svelte';
 
 	let { data } = $props();
@@ -16,6 +18,7 @@
 	let value = $state(data.initialValue);
 	let fullscreen = $state(data.fullScreen);
 	let sizeMode: TextSizeMode = $state(data.sizeMode as TextSizeMode);
+	let qrMode = $state(data.qrMode);
 	let mounted = $state(false);
 	let controlsElement: HTMLDivElement | null = $state(null);
 
@@ -24,7 +27,7 @@
 
 		try {
 			replaceState(
-				`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen}&sizeMode=${sizeMode}`,
+				`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen ? 1 : 0}&size=${sizeMode}&qr=${qrMode ? 1 : 0}`,
 				page.state
 			);
 		} catch (error) {
@@ -32,9 +35,11 @@
 		}
 	});
 
-	onMount(() => {
+	afterNavigate(() => {
 		mounted = true;
+	});
 
+	onMount(() => {
 		if (data.fullScreen) {
 			window.document.documentElement.requestFullscreen();
 		}
@@ -42,7 +47,11 @@
 </script>
 
 <div class="flex h-screen w-screen flex-col items-center justify-center">
-	<AdaptiveInput bind:value {sizeMode} />
+	{#if qrMode}
+		<QrCodeDisplay {value} />
+	{:else}
+		<AdaptiveInput bind:value {sizeMode} />
+	{/if}
 	<div
 		bind:this={controlsElement}
 		data-screenshot-excluded
@@ -50,6 +59,7 @@
 	>
 		<CopyUrlButton />
 		<CopyImageButton hiddenElements={controlsElement ? [controlsElement] : []} />
+		<QrCodeButton bind:qrMode />
 		<TextSizeModeButton bind:sizeMode />
 		<ColorModeButton />
 		<FullScreenButton bind:fullscreen />
