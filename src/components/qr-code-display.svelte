@@ -24,9 +24,10 @@
 					errorCorrectionLevel: 'M',
 					margin: 4,
 					width: 1200,
-					color: darkMode
-						? { dark: '#f8fafcff', light: '#0f172aff' }
-						: { dark: '#0f172aff', light: '#ffffffff' }
+					color: {
+						dark: darkMode ? '#f8fafcff' : '#0f172aff',
+						light: '#00000000'
+					}
 				})
 			)
 			.then((url) => {
@@ -48,7 +49,7 @@
 		<img
 			src={dataUrl}
 			alt="QR code containing the displayed text"
-			class="max-h-[min(90vh,90vw)] max-w-[min(90vh,90vw)] rounded-sm"
+			class="bg-background max-h-[min(90vh,90vw)] max-w-[min(90vh,90vw)] rounded-sm"
 		/>
 	{:else if errorMessage}
 		<p class="text-muted-foreground text-center text-lg">{errorMessage}</p>
