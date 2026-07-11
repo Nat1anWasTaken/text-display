@@ -8,6 +8,7 @@ A modern, responsive web application for displaying large text with adaptive fon
 - **URL Sharing**: Share your text displays via URL parameters - text content and settings persist
 - **Full Screen Mode**: Enter full screen for distraction-free text display
 - **Dark/Light Theme**: Toggle between dark and light themes for different environments
+- **QR Code Mode**: Turn the displayed text into a theme-aware, scannable QR code
 - **Copy URL**: Quickly copy the current display URL to share with others
 - **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
 - **Clean Interface**: Minimal UI that fades out when not needed, focusing on the text content
@@ -75,12 +76,14 @@ pnpm preview
 The application supports URL parameters for easy sharing:
 
 - `value`: The text to display
-- `fullscreen`: Whether to start in fullscreen mode (`true` or `false`)
+- `fullscreen`: Whether to start in fullscreen mode (`1` or `0`)
+- `size`: Text sizing mode (`largest` or `capped`)
+- `qr`: Whether to display the value as a QR code (`1` or `0`)
 
 Example:
 
 ```
-https://your-domain.com/?value=Hello%20World&fullscreen=true
+https://your-domain.com/?value=Hello%20World&fullscreen=1&size=largest&qr=1
 ```
 
 ## Contributing
