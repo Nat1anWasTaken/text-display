@@ -7,7 +7,7 @@
 	let { class: className = '' }: { class?: string } = $props();
 	let copied = $state(false);
 
-	let timeout: number | null = $state(null);
+	let timeout: ReturnType<typeof setTimeout> | null = $state(null);
 
 	function copyUrl() {
 		if (timeout) {

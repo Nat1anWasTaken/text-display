@@ -11,7 +11,7 @@
 	}: { class?: string; hiddenElements?: HTMLElement[] } = $props();
 
 	let copied = $state(false);
-	let timeout: number | null = $state(null);
+	let timeout: ReturnType<typeof setTimeout> | null = $state(null);
 
 	async function copyAsImage() {
 		if (timeout) {
