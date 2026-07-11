@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { afterNavigate, replaceState } from '$app/navigation';
 	import { page } from '$app/state';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Command from '$lib/components/ui/command';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
 	import { copyViewportAsImage } from '$lib/utils/copy-as-image';
 	import {
 		Copy,
 		Image as ImageIcon,
-		ListFilter,
 		Maximize,
 		MoonStar,
 		QrCode,
@@ -107,23 +104,6 @@
 		data-screenshot-excluded
 		class="absolute top-5 right-5 flex flex-row gap-2 opacity-0 transition-opacity duration-200 hover:opacity-100"
 	>
-		<Tooltip>
-			<TooltipTrigger>
-				{#snippet child({ props })}
-					<Button
-						{...props}
-						size="icon"
-						variant="outline"
-						class="cursor-pointer"
-						onclick={() => (commandPaletteOpen = true)}
-						aria-label="Open command palette"
-					>
-						<ListFilter />
-					</Button>
-				{/snippet}
-			</TooltipTrigger>
-			<TooltipContent side="bottom">Command palette</TooltipContent>
-		</Tooltip>
 		<CopyUrlButton />
 		<CopyImageButton hiddenElements={controlsElement ? [controlsElement] : []} />
 		<QrCodeButton bind:qrMode />
@@ -144,40 +124,59 @@
 			<Command.List>
 				<Command.Empty>No commands found.</Command.Empty>
 				<Command.Group heading="View">
-					<Command.Item onSelect={() => runCommand(() => (qrMode = !qrMode))}>
+					<Command.Item
+						keywords={['qr', 'qrcode', 'scan', 'code', 'text']}
+						onSelect={() => runCommand(() => void (qrMode = !qrMode))}
+					>
 						{#if qrMode}<Type />{:else}<QrCode />{/if}
 						<span>{qrMode ? 'Show text' : 'Show QR code'}</span>
 					</Command.Item>
 					<Command.Item
+						keywords={['size', 'font', 'text', 'largest', 'capped', 'scale', 'resize']}
 						onSelect={() =>
-							runCommand(() => (sizeMode = sizeMode === 'largest' ? 'capped' : 'largest'))}
+							runCommand(() => void (sizeMode = sizeMode === 'largest' ? 'capped' : 'largest'))}
 					>
 						<Scaling />
 						<span>{sizeMode === 'largest' ? 'Use capped text size' : 'Use largest text size'}</span>
 					</Command.Item>
-					<Command.Item onSelect={() => runCommand(toggleMode)}>
+					<Command.Item
+						keywords={['dark', 'light', 'theme', 'mode', 'appearance', 'color']}
+						onSelect={() => runCommand(toggleMode)}
+					>
 						<MoonStar />
 						<span>Toggle color theme</span>
 					</Command.Item>
-					<Command.Item onSelect={() => runCommand(toggleFullscreen)}>
+					<Command.Item
+						keywords={['fullscreen', 'full screen', 'maximize', 'expand', 'window']}
+						onSelect={() => runCommand(toggleFullscreen)}
+					>
 						<Maximize />
 						<span>{fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}</span>
 					</Command.Item>
 				</Command.Group>
 				<Command.Separator />
 				<Command.Group heading="Share">
-					<Command.Item onSelect={() => runCommand(copyUrl)}>
+					<Command.Item
+						keywords={['url', 'link', 'address', 'share', 'clipboard']}
+						onSelect={() => runCommand(copyUrl)}
+					>
 						<Copy />
 						<span>Copy URL</span>
 					</Command.Item>
-					<Command.Item onSelect={() => runCommand(() => copyViewportAsImage())}>
+					<Command.Item
+						keywords={['image', 'picture', 'screenshot', 'png', 'share', 'clipboard']}
+						onSelect={() => runCommand(() => copyViewportAsImage())}
+					>
 						<ImageIcon />
 						<span>Copy as image</span>
 					</Command.Item>
 				</Command.Group>
 				<Command.Separator />
 				<Command.Group heading="Edit">
-					<Command.Item onSelect={() => runCommand(() => (value = ''))}>
+					<Command.Item
+						keywords={['clear', 'delete', 'erase', 'remove', 'reset', 'empty']}
+						onSelect={() => runCommand(() => void (value = ''))}
+					>
 						<Trash2 />
 						<span>Clear text</span>
 					</Command.Item>
