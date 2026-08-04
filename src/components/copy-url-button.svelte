@@ -4,7 +4,7 @@
 	import { Check, Copy } from '@lucide/svelte';
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
 
-	let { class: className = '' }: { class?: string } = $props();
+	let { class: className = '', beforeCopy }: { class?: string; beforeCopy?: () => void } = $props();
 	let copied = $state(false);
 
 	let timeout: ReturnType<typeof setTimeout> | null = $state(null);
@@ -14,6 +14,7 @@
 			clearTimeout(timeout);
 		}
 
+		beforeCopy?.();
 		navigator.clipboard.writeText(window.location.href).then(() => {
 			copied = true;
 

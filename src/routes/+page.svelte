@@ -37,13 +37,37 @@
 	let commandPaletteOpen = $state(false);
 	let mounted = $state(false);
 	let controlsElement: HTMLDivElement | null = $state(null);
+	let urlUpdateTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	const URL_UPDATE_DELAY = 500;
 
 	function runCommand(command: () => void | Promise<void>) {
 		commandPaletteOpen = false;
 		void tick().then(command);
 	}
 
+	function getShareUrl() {
+		return `?value=${encodeURIComponent(value)}&fullscreen=${fullscreen ? 1 : 0}&size=${sizeMode}&qr=${qrMode ? 1 : 0}`;
+	}
+
+	function syncUrl() {
+		if (urlUpdateTimeout) {
+			clearTimeout(urlUpdateTimeout);
+			urlUpdateTimeout = null;
+		}
+
+		const url = getShareUrl();
+		if (`${window.location.search}${window.location.hash}` === url) return;
+
+		try {
+			replaceState(url, page.state);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
 	function copyUrl() {
+		syncUrl();
 		return navigator.clipboard.writeText(window.location.href);
 	}
 
@@ -67,14 +91,15 @@
 	$effect(() => {
 		if (!mounted) return;
 
-		try {
-			replaceState(
-				`?value=${encodeURIComponent(value)}&fullscreen=${fullscreen ? 1 : 0}&size=${sizeMode}&qr=${qrMode ? 1 : 0}`,
-				page.state
-			);
-		} catch (error) {
-			console.error(error);
-		}
+		getShareUrl();
+		urlUpdateTimeout = setTimeout(syncUrl, URL_UPDATE_DELAY);
+
+		return () => {
+			if (urlUpdateTimeout) {
+				clearTimeout(urlUpdateTimeout);
+				urlUpdateTimeout = null;
+			}
+		};
 	});
 
 	afterNavigate(() => {
@@ -87,11 +112,7 @@
 		}
 
 		const handleKeydown = (event: KeyboardEvent) => {
-			if (
-				(event.metaKey || event.ctrlKey) &&
-				event.shiftKey &&
-				event.key.toLowerCase() === 'p'
-			) {
+			if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === 'p') {
 				event.preventDefault();
 				commandPaletteOpen = !commandPaletteOpen;
 			}
@@ -114,7 +135,7 @@
 		data-screenshot-excluded
 		class="absolute top-5 right-5 flex flex-row gap-2 opacity-0 transition-opacity duration-200 hover:opacity-100"
 	>
-		<CopyUrlButton />
+		<CopyUrlButton beforeCopy={syncUrl} />
 		<CopyImageButton hiddenElements={controlsElement ? [controlsElement] : []} />
 		<QrCodeButton {qrMode} onToggle={toggleQrMode} />
 		<TextSizeModeButton bind:sizeMode />
